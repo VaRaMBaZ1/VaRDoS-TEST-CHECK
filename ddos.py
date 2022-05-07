@@ -5,7 +5,6 @@ import requests
 import cfscrape
 import os
 import pyAesCrypt
-from numba import njit, prange
 
 os.system("clear")
 
@@ -49,7 +48,6 @@ def dospause2(barrier, url):
     dos2(url)
 
 # Аттака
-@njit
 def dos1(target):
     while True:
         useragent = random.choice(headersp)
