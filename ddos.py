@@ -1,4 +1,4 @@
-from colorama import Fore, Back, Style
+from colorama import *
 import threading
 import random
 import requests
