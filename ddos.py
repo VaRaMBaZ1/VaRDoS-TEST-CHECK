@@ -163,14 +163,16 @@ else:
         thr2.start()
 print(colorama.Fore.GREEN + "All threads are running! \n")
 
-while True:
-    proxyagenthttp = random.choice(proxy_http)
-    proxieshttphttp = {
+proxyagenthttp = random.choice(proxy_http)
+proxieshttphttp = {
         'http': f'http://{proxyagenthttp}'
     }
+    
+while True:
     checksite = requests.post(url, proxies=proxieshttphttp)
     if checksite.status_code >= 500:
         statustext = "OFFLINE"
     elif checksite.status_code >= 200:
         statustext = "ONLINE"
     print("\r Check Site | Status: ", checksite.status_code, " | ", statustext, end='')
+    time.sleep(1)
