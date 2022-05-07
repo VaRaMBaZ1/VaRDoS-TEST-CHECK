@@ -164,7 +164,7 @@ else:
 print(colorama.Fore.GREEN + "All threads are running! \n")
 
 while True:
-    checksite = requests.post(target, proxies=proxieshttphttp)
+    checksite = requests.post(url, proxies=proxieshttphttp)
     if checksite.status_code >= 500:
         statustext = "OFFLINE"
     elif checksite.status_code >= 200:
