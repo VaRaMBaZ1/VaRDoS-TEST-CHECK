@@ -169,10 +169,9 @@ print(Style.RESET_ALL)
 while True:
     useragent = random.choice(headersp)
     header = {'user-agent': useragent}
-    
-    checksite = requests.post(url, headers=header)
-    if checksite.status_code >= 500:
-        statustext = "OFFLINE"
-    elif checksite.status_code >= 200:
+    try:
+        checksite = requests.post(url, headers=header)
         statustext = "ONLINE"
+    except:
+        statustext = "OFFLINE"
     print("\r Check Site | Status: ", checksite.status_code, " | ", statustext, end='')
