@@ -5,6 +5,7 @@ import requests
 import cfscrape
 import os
 import pyAesCrypt
+import time
 
 os.system("clear")
 
