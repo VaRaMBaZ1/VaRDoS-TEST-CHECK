@@ -167,7 +167,10 @@ print(colorama.Fore.GREEN + "All threads are running!")
 print(Style.RESET_ALL)
 
 while True:
-    checksite = requests.post(url)
+    useragent = random.choice(headersp)
+    header = {'user-agent': useragent}
+    
+    checksite = requests.post(url, headers=header)
     if checksite.status_code >= 500:
         statustext = "OFFLINE"
     elif checksite.status_code >= 200:
