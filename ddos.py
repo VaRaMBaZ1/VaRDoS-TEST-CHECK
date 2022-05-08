@@ -169,8 +169,14 @@ print(Style.RESET_ALL)
 while True:
     useragent = random.choice(headersp)
     header = {'user-agent': useragent}
+    
+    proxyagenthttp = random.choice(proxy_http)
+    proxieshttphttp = {
+        'http': f'http://{proxyagenthttp}',
+        'https': f'http://{proxyagenthttp}',
+    }
     try:
-        checksite = requests.post(url, headers=header)
+        checksite = requests.post(url, headers=header, proxies=proxieshttphttp)
         if checksite.status_code >= 500:
             statustext = "OFF_LINE"
         else:
