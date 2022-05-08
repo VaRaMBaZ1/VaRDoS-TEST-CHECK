@@ -143,11 +143,11 @@ if not url.__contains__("."):
     exit(colorama.Fore.RED + "Invalid domain")
 
 try:
-    threads = int(input("Threads[max 10000]: "))
+    threads = int(input("Threads[max 3000]: "))
 except ValueError:
     exit(colorama.Fore.RED + "Threads count is incorrect!")
 
-if threads == 0 or threads > 10000:
+if threads == 0 or threads > 3000:
     exit(colorama.Fore.RED + "Threads count is incorrect!")
 
 bar = threading.Barrier(threads)
