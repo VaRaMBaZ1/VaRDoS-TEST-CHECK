@@ -186,4 +186,4 @@ while True:
     except:
         pass
     
-    print(clolor + "\r Check Site | Status: ", checksite.status_code, " | ", statustext, end='')
+    print("\r", clolor, "Check Site | Status: ", checksite.status_code, " | ", statustext, end='')
