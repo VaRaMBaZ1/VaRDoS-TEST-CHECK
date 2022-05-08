@@ -161,9 +161,9 @@ if proxyuseage == 1:
         thr = threading.Thread(target=dospause1, args=(bar, url, ))
         thr.start()
     else:
-    for i in range(0, threads):
-        thr2 = threading.Thread(target=dospause2, args=(bar, url, ))
-        thr2.start()
+        for i in range(0, threads):
+            thr2 = threading.Thread(target=dospause2, args=(bar, url, ))
+            thr2.start()
 print(colorama.Fore.GREEN + "All threads are running!")
 print(Style.RESET_ALL)
 
