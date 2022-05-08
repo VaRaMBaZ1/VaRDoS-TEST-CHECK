@@ -155,18 +155,17 @@ bar = threading.Barrier(threads)
 proxyuseage = int(input("Use a proxy?[1-yes; 2-no]: "))
 print("")
 
-def startthreads(bar, url, threads):
-    print(colorama.Fore.YELLOW + "Starting threads...")
-    if proxyuseage == 1:
-        for i in prange(0, threads):
-            thr = threading.Thread(target=dospause1, args=(bar, url, ))
-            thr.start()
+print(colorama.Fore.YELLOW + "Starting threads...")
+if proxyuseage == 1:
+    for i in prange(0, threads):
+        thr = threading.Thread(target=dospause1, args=(bar, url, ))
+        thr.start()
     else:
-        for i in prange(0, threads):
-            thr2 = threading.Thread(target=dospause2, args=(bar, url, ))
-            thr2.start()
-    print(colorama.Fore.GREEN + "All threads are running!")
-    print(Style.RESET_ALL)
+    for i in prange(0, threads):
+        thr2 = threading.Thread(target=dospause2, args=(bar, url, ))
+        thr2.start()
+print(colorama.Fore.GREEN + "All threads are running!")
+print(Style.RESET_ALL)
 
 while True:
     useragent = random.choice(headersp)
