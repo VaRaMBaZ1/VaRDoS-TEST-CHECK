@@ -171,7 +171,11 @@ while True:
     header = {'user-agent': useragent}
     try:
         checksite = requests.post(url, headers=header)
-        statustext = "ONLINE"
+        if checksite.status_code >= 500:
+            statustext = "OFF_LINE"
+        else:
+            statustext = "ON_LINE" 
     except:
-        statustext = "OFFLINE"
+        pass
+    
     print("\r Check Site | Status: ", checksite.status_code, " | ", statustext, end='')
