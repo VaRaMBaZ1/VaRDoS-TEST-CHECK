@@ -179,8 +179,10 @@ while True:
         checksite = requests.post(url, headers=header, proxies=proxieshttphttp)
         if checksite.status_code >= 500:
             statustext = "OFF_LINE"
+            clolor = colorama.Fore.RED
         else:
             statustext = "ON_LINE" 
+            clolor = colorama.Fore.GREEN
     except:
         pass
     
