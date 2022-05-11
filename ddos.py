@@ -148,5 +148,5 @@ while True:
             statustext = "ON_LINE"
     except:
         pass
-    print("\r Check Site | Status: ", checksite.status_code, " | ", statustext, end='')
+    print("\r Check Site | Status: " + str(checksite.status_code) + " | " + str(statustext), end='')
     time.sleep(1)
