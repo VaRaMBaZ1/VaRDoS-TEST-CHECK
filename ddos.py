@@ -150,24 +150,24 @@ else:
 print(colorama.Fore.GREEN + "All threads are running!")
 
 while True:
-    useragent5 = random.choice(headersp)
-
-    proxyagenthttp3 = random.choice(proxy_http)
-
     try:
+        useragent5 = random.choice(headersp)
+        proxyagenthttp3 = random.choice(proxy_http)
         checksite = requests.post(url, headers={'user-agent': useragent5},
                                   proxies={'http': proxyagenthttp3, 'https': proxyagenthttp3})
-        trysite = true
     except:
-        trysite = false
+        useragent5 = random.choice(headersp)
+        proxyagenthttp3 = random.choice(proxy_http)
+        checksite = requests.post(url, headers={'user-agent': useragent5},
+                                  proxies={'http': proxyagenthttp3, 'https': proxyagenthttp3})
+        pass
 
     if checksite.status_code >= 500:
         statustext = "OFF_LINE"
     else:
         statustext = "ON_LINE"
 
-    if trysite == true:
-        print("\r Check Site | Status: " + str(checksite.status_code) + " | " + str(statustext), end='')
+    print("\r Check Site | Status: " + str(checksite.status_code) + " | " + str(statustext), end='')
 
     time.sleep(1)
 
