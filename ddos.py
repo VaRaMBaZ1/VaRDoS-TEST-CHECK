@@ -150,11 +150,10 @@ else:
 print(colorama.Fore.GREEN + "All threads are running!")
 
 while True:
-    useragent = random.choice(headersp)
-    header = {'user-agent': useragent5}
+    useragent5 = random.choice(headersp)
 
     proxyagenthttp3 = random.choice(proxy_http)
-    
+
     checksite = requests.post(url, headers={'user-agent': useragent5},
                               proxies={'http': proxyagenthttp3, 'https': proxyagenthttp3})
 
