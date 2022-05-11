@@ -160,7 +160,6 @@ while True:
         trysite = true
     except:
         trysite = false
-        pass
 
     if checksite.status_code >= 500:
         statustext = "OFF_LINE"
@@ -169,6 +168,6 @@ while True:
 
     if trysite == true:
         print("\r Check Site | Status: " + str(checksite.status_code) + " | " + str(statustext), end='')
-        
+
     time.sleep(1)
 
