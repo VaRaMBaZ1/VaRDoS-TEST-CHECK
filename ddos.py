@@ -62,7 +62,7 @@ def dos1_1(target):
         header = {'accept': '*/*', 'user-agent': useragent}
 
         useragent2 = random.choice(headersp)
-        header2 = {'accept': '*/*', 'user-agent': useragent}
+        header2 = {'accept': '*/*', 'user-agent': useragent2}
 
         proxyagenthttp = random.choice(proxy_http)
         proxyagentsocks = random.choice(proxy_socks)
@@ -93,7 +93,7 @@ def dos1_2(target):
         header = {'accept': '*/*', 'user-agent': useragent}
 
         useragent2 = random.choice(headersp)
-        header2 = {'accept': '*/*', 'user-agent': useragent}
+        header2 = {'accept': '*/*', 'user-agent': useragent2}
 
         proxyagenthttp = random.choice(proxy_http)
         proxyagentsocks = random.choice(proxy_socks)
