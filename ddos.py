@@ -153,7 +153,7 @@ if proxyuseage == 1:
     for i in prange(0, threads):
         threading.Thread(target=dos1_1, args=(url,)).start()
         threading.Thread(target=dos1_2, args=(url,)).start()
-        print("\r Threads: " + str(i))
+        print("\r Threads: " + str(i), end='')
 else:
     for i in prange(0, threads):
         thr2 = threading.Thread(target=dos2, args=(url,))
